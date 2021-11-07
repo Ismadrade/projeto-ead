@@ -1,4 +1,4 @@
-package br.com.ismadrade.authuser.service;
+package br.com.ismadrade.authuser.services;
 
 import br.com.ismadrade.authuser.models.UserModel;
 import org.springframework.data.domain.Page;

@@ -2,7 +2,7 @@ package br.com.ismadrade.authuser.controllers;
 
 import br.com.ismadrade.authuser.dtos.UserDto;
 import br.com.ismadrade.authuser.models.UserModel;
-import br.com.ismadrade.authuser.service.UserService;
+import br.com.ismadrade.authuser.services.UserService;
 import br.com.ismadrade.authuser.specifications.SpecificationTemplate;
 import com.fasterxml.jackson.annotation.JsonView;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +20,6 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 

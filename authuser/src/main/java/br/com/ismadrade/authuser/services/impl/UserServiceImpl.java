@@ -1,8 +1,8 @@
-package br.com.ismadrade.authuser.service.impl;
+package br.com.ismadrade.authuser.services.impl;
 
 import br.com.ismadrade.authuser.models.UserModel;
 import br.com.ismadrade.authuser.repositories.UserRepository;
-import br.com.ismadrade.authuser.service.UserService;
+import br.com.ismadrade.authuser.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

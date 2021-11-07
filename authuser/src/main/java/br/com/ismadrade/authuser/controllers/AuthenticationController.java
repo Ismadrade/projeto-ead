@@ -4,7 +4,7 @@ import br.com.ismadrade.authuser.dtos.UserDto;
 import br.com.ismadrade.authuser.enums.UserStatus;
 import br.com.ismadrade.authuser.enums.UserType;
 import br.com.ismadrade.authuser.models.UserModel;
-import br.com.ismadrade.authuser.service.UserService;
+import br.com.ismadrade.authuser.services.UserService;
 import com.fasterxml.jackson.annotation.JsonView;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
