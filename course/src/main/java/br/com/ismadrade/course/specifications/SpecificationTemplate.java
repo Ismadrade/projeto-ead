@@ -38,4 +38,14 @@ public class SpecificationTemplate {
             return cb.and(cb.equal(course.get("courseId"), courseId), cb.isMember(module, coursesModules));
         };
     }
+
+    public static Specification<LessonModel> lessonModuleId(final UUID moduleId){
+        return (root, query, cb) -> {
+            query.distinct(true);
+            Root<LessonModel> lesson = root;
+            Root<ModuleModel> module = query.from(ModuleModel.class);
+            Expression<Collection<LessonModel>> moduleLessons = module.get("lessons");
+            return cb.and(cb.equal(module.get("moduleId"), moduleId), cb.isMember(lesson, moduleLessons));
+        };
+    }
 }
