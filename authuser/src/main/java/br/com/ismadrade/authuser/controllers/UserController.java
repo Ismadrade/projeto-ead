@@ -5,6 +5,7 @@ import br.com.ismadrade.authuser.models.UserModel;
 import br.com.ismadrade.authuser.services.UserService;
 import br.com.ismadrade.authuser.specifications.SpecificationTemplate;
 import com.fasterxml.jackson.annotation.JsonView;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -23,6 +24,7 @@ import java.time.ZoneId;
 import java.util.Optional;
 import java.util.UUID;
 
+@Log4j2
 @RestController
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RequestMapping("/users")
@@ -69,6 +71,7 @@ public class UserController {
                                              @RequestBody
                                              @JsonView(UserDto.UserView.UserPut.class)
                                              @Validated(UserDto.UserView.UserPut.class) UserDto userDto){
+        log.debug("PUT updateUser userDto received {}", userDto.toString());
         Optional<UserModel> userModelOptional = userService.findById(userId);
         if(!userModelOptional.isPresent()){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found!");
@@ -79,6 +82,8 @@ public class UserController {
             userModel.setCpf(userDto.getCpf());
             userModel.setLastUpdateDate(LocalDateTime.now(ZoneId.of("UTC")));
             userService.save(userModel);
+            log.debug("PUT updateUser userDto saved {}", userModel.toString());
+            log.info("User updated successfully {}", userModel.getUserId());
             return ResponseEntity.status(HttpStatus.OK).body(userModel);
         }
     }
