@@ -1,5 +1,6 @@
 package br.com.ismadrade.course.clients;
 
+import br.com.ismadrade.course.dtos.CourseUserDto;
 import br.com.ismadrade.course.dtos.ResponsePageDto;
 import br.com.ismadrade.course.dtos.UserDto;
 import br.com.ismadrade.course.services.UtilsService;
@@ -52,5 +53,13 @@ public class AuthUserClient {
     public ResponseEntity<UserDto> getOneUserById(UUID userId){
         String url = REQUEST_URL_AUTHUSER + "/users/" + userId;
         return restTemplate.exchange(url, HttpMethod.GET, null, UserDto.class);
+    }
+
+    public void postSubscriptionUserInCourse(UUID courseId, UUID userId) {
+        String url = REQUEST_URL_AUTHUSER + "/users/" + userId + "/courses/subscription";
+        var courseUserDto = new CourseUserDto();
+        courseUserDto.setUserId(userId);
+        courseUserDto.setCourseId(courseId);
+        restTemplate.postForObject(url, courseUserDto, String.class);
     }
 }
