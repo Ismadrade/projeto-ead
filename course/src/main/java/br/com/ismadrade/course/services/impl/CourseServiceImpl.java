@@ -1,9 +1,11 @@
 package br.com.ismadrade.course.services.impl;
 
 import br.com.ismadrade.course.models.CourseModel;
+import br.com.ismadrade.course.models.CourseUserModel;
 import br.com.ismadrade.course.models.LessonModel;
 import br.com.ismadrade.course.models.ModuleModel;
 import br.com.ismadrade.course.repositories.CourseRepository;
+import br.com.ismadrade.course.repositories.CourseUserRepository;
 import br.com.ismadrade.course.repositories.LessonRepository;
 import br.com.ismadrade.course.repositories.ModuleRepository;
 import br.com.ismadrade.course.services.CourseService;
@@ -30,6 +32,9 @@ public class CourseServiceImpl implements CourseService {
     @Autowired
     LessonRepository lessonRepository;
 
+    @Autowired
+    CourseUserRepository courseUserRepository;
+
     @Transactional
     @Override
     public void delete(CourseModel courseModel) {
@@ -42,6 +47,10 @@ public class CourseServiceImpl implements CourseService {
                 }
             }
             moduleRepository.deleteAll(moduleModelList);
+        }
+        List<CourseUserModel> courseUserModelList = courseUserRepository.findAllCourseUserIntoCourse(courseModel.getCourseId());
+        if(!courseUserModelList.isEmpty()){
+            courseUserRepository.deleteAll(courseUserModelList);
         }
         courseRepository.delete(courseModel);
     }
