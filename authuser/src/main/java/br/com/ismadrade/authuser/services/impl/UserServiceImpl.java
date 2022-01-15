@@ -1,9 +1,9 @@
 package br.com.ismadrade.authuser.services.impl;
 
 import br.com.ismadrade.authuser.clients.CourseClient;
-import br.com.ismadrade.authuser.models.UserCourseModel;
+import br.com.ismadrade.authuser.enums.ActionType;
 import br.com.ismadrade.authuser.models.UserModel;
-import br.com.ismadrade.authuser.repositories.UserCourseRepository;
+import br.com.ismadrade.authuser.publishers.UserEventPublisher;
 import br.com.ismadrade.authuser.repositories.UserRepository;
 import br.com.ismadrade.authuser.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,10 +24,10 @@ public class UserServiceImpl implements UserService {
     UserRepository userRepository;
 
     @Autowired
-    UserCourseRepository userCourseRepository;
+    CourseClient courseClient;
 
     @Autowired
-    CourseClient courseClient;
+    UserEventPublisher userEventPublisher;
 
     @Override
     public List<UserModel> findAll() {
@@ -42,21 +42,12 @@ public class UserServiceImpl implements UserService {
     @Transactional
     @Override
     public void delete(UserModel userModel) {
-        boolean deleteUserCourseInCourse = false;
-        List<UserCourseModel> userCourseModelList = userCourseRepository.findAllUserCourseIntoUser(userModel.getUserId());
-        if(!userCourseModelList.isEmpty()){
-            userCourseRepository.deleteAll(userCourseModelList);
-            deleteUserCourseInCourse = true;
-        }
         userRepository.delete(userModel);
-        if(deleteUserCourseInCourse){
-            courseClient.deleteUserInCourse(userModel.getUserId());
-        }
     }
 
     @Override
-    public void save(UserModel userModel) {
-        userRepository.save(userModel);
+    public UserModel save(UserModel userModel) {
+        return userRepository.save(userModel);
     }
 
     @Override
@@ -72,5 +63,13 @@ public class UserServiceImpl implements UserService {
     @Override
     public Page<UserModel> findAll(Specification<UserModel> spec, Pageable pageable) {
         return userRepository.findAll(spec, pageable);
+    }
+
+    @Transactional
+    @Override
+    public UserModel saveUser(UserModel userModel){
+        userModel = save(userModel);
+        userEventPublisher.publishUserEvent(userModel.convertToUserEventDto(), ActionType.CREATE);
+        return userModel;
     }
 }
