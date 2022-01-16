@@ -2,7 +2,9 @@ package br.com.ismadrade.course.controllers;
 
 
 import br.com.ismadrade.course.dtos.SubscriptionDto;
+import br.com.ismadrade.course.enums.UserStatus;
 import br.com.ismadrade.course.models.CourseModel;
+import br.com.ismadrade.course.models.UserModel;
 import br.com.ismadrade.course.services.CourseService;
 import br.com.ismadrade.course.services.UserService;
 import br.com.ismadrade.course.specifications.SpecificationTemplate;
@@ -50,8 +52,18 @@ public class CourseUserController {
         if(!courseModelOptional.isPresent()){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Course Not Found.");
         }
-        //verificações state transfer
-        return ResponseEntity.status(HttpStatus.CREATED).body("");
+        if(courseService.existsByCourseAndUser(courseId, subscriptionDto.getUserId())){
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("Error: subscription already exists!");
+        }
+        Optional<UserModel> userModelOptional = userService.findById(subscriptionDto.getUserId());
+        if(!userModelOptional.isPresent()){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User Not Found.");
+        }
+        if(userModelOptional.get().getUserStatus().equals(UserStatus.BLOCKED.toString())){
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("User is blocked.");
+        }
+        courseService.saveSubscriptionUserInCourse(courseModelOptional.get().getCourseId(), userModelOptional.get().getUserId());
+        return ResponseEntity.status(HttpStatus.CREATED).body("Subscription created successfully.");
 
     }
 
