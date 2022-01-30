@@ -1,0 +1,21 @@
+server:
+  port: 8888
+
+spring:
+  application:
+    name: ead-config-server
+  cloud:
+    config:
+      server:
+        git:
+          uri: https://github.com/Ismadrade/ead-config-server-repo
+          default-label: main
+          username: ismadrade
+          password: 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
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: 'http://localhost:8761/eureka'
+  instance:
+    hostname: localhost
