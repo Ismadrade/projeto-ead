@@ -11,7 +11,7 @@ spring:
           uri: https://github.com/Ismadrade/ead-config-server-repo
           default-label: main
           username: ismadrade
-          password: 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
+          password: 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
 
 eureka:
   client:
