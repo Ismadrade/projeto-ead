@@ -10,8 +10,8 @@ spring:
         git:
           uri: https://github.com/Ismadrade/ead-config-server-repo
           default-label: main
-          username: ismadrade
-          password: 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
+          username: ${GITHUB_USER}
+          password: ${GITHUB_PASS}
 
 eureka:
   client:
