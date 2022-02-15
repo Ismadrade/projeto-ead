@@ -1,6 +1,7 @@
 package br.com.ismadrade.course.services;
 
 import br.com.ismadrade.course.models.CourseModel;
+import br.com.ismadrade.course.models.UserModel;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -20,4 +21,6 @@ public interface CourseService {
     boolean existsByCourseAndUser(UUID courseId, UUID userId);
 
     void saveSubscriptionUserInCourse(UUID courseId, UUID userId);
+
+    void saveSubscriptionUserInCourseAndSendNotification(CourseModel course, UserModel user);
 }
