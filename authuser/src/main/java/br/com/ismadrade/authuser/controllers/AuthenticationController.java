@@ -1,9 +1,12 @@
 package br.com.ismadrade.authuser.controllers;
 
 import br.com.ismadrade.authuser.dtos.UserDto;
+import br.com.ismadrade.authuser.enums.RoleType;
 import br.com.ismadrade.authuser.enums.UserStatus;
 import br.com.ismadrade.authuser.enums.UserType;
+import br.com.ismadrade.authuser.models.RoleModel;
 import br.com.ismadrade.authuser.models.UserModel;
+import br.com.ismadrade.authuser.services.RoleService;
 import br.com.ismadrade.authuser.services.UserService;
 import com.fasterxml.jackson.annotation.JsonView;
 
@@ -14,6 +17,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -28,6 +32,12 @@ public class AuthenticationController {
 
     @Autowired
     UserService userService;
+
+    @Autowired
+    RoleService roleService;
+
+    @Autowired
+    PasswordEncoder encoder;
 
     @PostMapping("/signup")
     public ResponseEntity<Object> registerUser(@RequestBody
@@ -45,12 +55,17 @@ public class AuthenticationController {
             return ResponseEntity.status(HttpStatus.CONFLICT).body("Error: E-mail is Already Taken!");
         }
 
+        RoleModel roleModel = roleService.findByRoleName(RoleType.ROLE_STUDENT)
+                .orElseThrow(() -> new RuntimeException("Erro: Role is Not Found"));
+
+        userDto.setPassword(encoder.encode(userDto.getPassword()));
         var userModel = new UserModel();
         BeanUtils.copyProperties(userDto, userModel);
         userModel.setUserStatus(UserStatus.ACTIVE);
         userModel.setUserType(UserType.STUDENT);
         userModel.setCreationDate(LocalDateTime.now(ZoneId.of("UTC")));
         userModel.setLastUpdateDate(LocalDateTime.now(ZoneId.of("UTC")));
+        userModel.getRoles().add(roleModel);
         userService.saveUser(userModel);
         log.debug("POST registerUser userId saved {}", userModel.getUserId());
         log.info("User saved successfully  userId{}", userModel.getUserId());
