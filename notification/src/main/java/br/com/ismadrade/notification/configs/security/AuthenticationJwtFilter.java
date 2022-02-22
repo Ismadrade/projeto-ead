@@ -1,7 +1,6 @@
-package br.com.ismadrade.authuser.config.security;
+package br.com.ismadrade.notification.configs.security;
 
 
-import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -17,14 +16,11 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.UUID;
 
-@Log4j2
+
 public class AuthenticationJwtFilter extends OncePerRequestFilter {
 
     @Autowired
     JwtProvider jwtProvider;
-
-    @Autowired
-    UserDetailsServiceImpl userDetailsService;
 
 
     @Override
@@ -33,7 +29,8 @@ public class AuthenticationJwtFilter extends OncePerRequestFilter {
             String jwtStr = getTokenHeader(httpServletRequest);
             if (jwtStr != null && jwtProvider.validateJwt(jwtStr)) {
                 String userId = jwtProvider.getSubjectJwt(jwtStr);
-                UserDetails userDetails = userDetailsService.loadUserById(UUID.fromString(userId));
+                String rolesStr = jwtProvider.getClaimNameJwt(jwtStr, "roles");
+                UserDetails userDetails = UserDetailsImpl.build(UUID.fromString(userId), rolesStr);
                 UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
                         userDetails, null, userDetails.getAuthorities());
                 authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(httpServletRequest));
