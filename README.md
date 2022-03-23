@@ -34,7 +34,7 @@ Os dados do Github usados pelo Config Server foram colocados em variáveis de am
 - api gateway: responsável por gerenciar os microserviços, disponibilizando uma unica porta para realizar as requisições.
 - config server: responsável por pegar as informações do repositório privado do github e trazer para cada microserviço, o seu application.yml
 
-<img align="center" src="https://i.imgur.com/RRq9fm2.png" />
+<img align="center" src="https://i.imgur.com/2cgOkU5.png" />
 
 
 # Portas dos Projetos:
